@@ -1,0 +1,760 @@
+.font-inter {
+    font-family: 'Inter', sans-serif;
+}
+
+.font-poppins {
+    font-family: 'Poppins', sans-serif;
+}
+
+.logo-animation {
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+.loading-animation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.loading-spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid var(--spinner-border-color, #f3f3f3);
+    border-top: 4px solid var(--spinner-accent-color, #3b82f6);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.platform-card {
+    @apply flex items-center gap-3 p-6 rounded-xl border transition-all duration-300 transform hover:scale-105 cursor-pointer;
+    background: var(--card-bg, linear-gradient(to bottom right, #ffffff, #eef2ff));
+    border-color: var(--card-border-color, #e5e7eb);
+}
+
+.platform-card:hover {
+    box-shadow: var(--card-hover-shadow, 0 10px 15px -3px rgba(0, 0, 0, 0.1));
+    border-color: var(--card-hover-border-color, #818cf8);
+}
+
+.platform-card i {
+    @apply transition-colors duration-300;
+    color: var(--icon-color, #6366f1);
+}
+
+.platform-card:hover i {
+    color: var(--icon-hover-color, #4f46e5);
+}
+
+.platform-card span {
+    color: var(--text-color, #374151);
+    font-weight: 500;
+}
+
+.download-item {
+    @apply rounded-xl overflow-hidden transition-all duration-300;
+    background: var(--item-bg, #ffffff);
+    border: 1px solid var(--item-border-color, #e5e7eb);
+}
+
+.download-item:hover {
+    box-shadow: var(--item-hover-shadow, 0 10px 15px -3px rgba(0, 0, 0, 0.1));
+}
+
+.download-stats {
+    @apply grid grid-cols-2 md:grid-cols-4 gap-4 p-4 text-sm;
+    background: var(--stats-bg, #f9fafb);
+    color: var(--stats-text-color, #4b5563);
+}
+
+.stat-item {
+    @apply flex items-center gap-2;
+}
+
+.download-button {
+    @apply px-6 py-3 rounded-xl flex items-center gap-2 transform transition-all duration-300 
+           focus:outline-none focus:ring-2 focus:ring-offset-2;
+    background: var(--button-bg, #6366f1);
+    color: var(--button-text-color, #ffffff);
+}
+
+.download-button:hover {
+    background: var(--button-hover-bg, #4f46e5);
+    transform: scale(1.05);
+}
+
+.media-preview {
+    @apply rounded-xl overflow-hidden;
+    background: var(--preview-bg, #f9fafb);
+}
+
+.media-preview img,
+.media-preview video {
+    @apply w-full h-auto object-cover;
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from { 
+        opacity: 0; 
+        transform: translateY(10px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+@media (min-width: 768px) {
+    * {
+        scrollbar-width: auto;
+        -ms-overflow-style: auto;
+    }
+    
+    *::-webkit-scrollbar {
+        display: block;
+    }
+}
+
+@media (max-width: 767px) {
+    * {
+        scrollbar-width: auto;
+        -ms-overflow-style: auto;
+    }
+    
+    *::-webkit-scrollbar {
+        display: block;
+    }
+}
+
+@supports (scroll-behavior: smooth) {
+    html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 100px;
+    }
+}
+
+section[id] {
+    position: relative;
+    scroll-margin-block-start: 100px;
+}
+
+body {
+    overflow-x: hidden;
+    width: 100%;
+}
+
+:root {
+    --bg-gradient-light: linear-gradient(to bottom right, #f8fafc, #eef2ff);
+    --bg-gradient-dark: linear-gradient(to bottom right, #0f172a, #1e293b);
+    --main-bg: #ffffff;
+    --text-primary: #1e293b;
+    --text-secondary: #475569;
+    --text-tertiary: #64748b;
+    --card-bg: #ffffff;
+    --card-hover: #f8fafc;
+    --border-color: #e2e8f0;
+    --icon-primary: #6366f1;
+    --icon-secondary: #818cf8;
+    --spinner-border-color: #f3f3f3;
+    --spinner-accent-color: #3b82f6;
+    --card-border-color: #e5e7eb;
+    --card-hover-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --card-hover-border-color: #818cf8;
+    --icon-color: #6366f1;
+    --icon-hover-color: #4f46e5;
+    --text-color: #374151;
+    --item-bg: #ffffff;
+    --item-border-color: #e5e7eb;
+    --item-hover-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --stats-bg: #f9fafb;
+    --stats-text-color: #4b5563;
+    --button-bg: #6366f1;
+    --button-text-color: #ffffff;
+    --button-hover-bg: #4f46e5;
+    --preview-bg: #f9fafb;
+    --scrollbar-track: #f1f1f1;
+    --scrollbar-thumb: #3b82f6;
+    --scrollbar-thumb-hover: #2563eb;
+    --faq-bg: #ffffff;
+    --faq-hover: #f3f4f6;
+    --faq-content-bg: #ffffff;
+    --platform-item-bg: #f9fafb;
+    --input-bg: #ffffff;
+    --input-border: #e5e7eb;
+    --input-text: #374151;
+    --input-placeholder: #9ca3af;
+    --gradient-from: #f8fafc;
+    --gradient-to: #eef2ff;
+    --issue-bg-from: #f9fafb;
+    --issue-bg-to: #f3f4f6;
+    --transition-accent: none;
+}
+
+.dark {
+    --main-bg: #0f172a;
+    --bg-gradient-light: linear-gradient(to bottom right, #0f172a, #1e293b);
+    --text-primary: #c4c4c4;
+    --text-secondary: #e2e8f0;
+    --text-tertiary: #cbd5e1;
+    --card-bg: #1e293b;
+    --card-hover: #2d3748;
+    --border-color: #374151;
+    --icon-primary: #818cf8;
+    --icon-secondary: #6366f1;
+    --spinner-border-color: #374151;
+    --spinner-accent-color: #6366f1;
+    --card-border-color: #374151;
+    --card-hover-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+    --card-hover-border-color: #6366f1;
+    --icon-color: #818cf8;
+    --icon-hover-color: #6366f1;
+    --text-color: #e5e7eb;
+    --item-bg: #1f2937;
+    --item-border-color: #374151;
+    --item-hover-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+    --stats-bg: #111827;
+    --stats-text-color: #9ca3af;
+    --button-bg: #6366f1;
+    --button-text-color: #ffffff;
+    --button-hover-bg: #4f46e5;
+    --preview-bg: #111827;
+    --scrollbar-track: #1f2937;
+    --scrollbar-thumb: #6366f1;
+    --scrollbar-thumb-hover: #818cf8;
+    --faq-bg: #1f2937;
+    --faq-hover: #2d3748;
+    --faq-content-bg: #1f2937;
+    --platform-item-bg: #1f2937;
+    --input-bg: #374151;
+    --input-border: #4b5563;
+    --input-text: #e5e7eb;
+    --input-placeholder: #9ca3af;
+    --gradient-from: #0f172a;
+    --gradient-to: #1e293b;
+    --issue-bg-from: #1f2937;
+    --issue-bg-to: #111827;
+}
+
+html {
+    background-color: var(--main-bg);
+}
+
+body {
+    background: var(--bg-gradient-light);
+    color: var(--text-primary);
+    min-height: 100vh;
+}
+
+.text-gray-800 {
+    color: var(--text-primary) !important;
+}
+
+.text-gray-600 {
+    color: var(--text-secondary) !important;
+}
+
+.border-gray-100,
+.border-gray-200 {
+    border-color: var(--border-color) !important;
+}
+
+.text-indigo-500 {
+    color: var(--icon-primary) !important;
+}
+
+.logo-bounce {
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+* {
+    transition: background-color 0.3s ease,
+                color 0.3s ease,
+                border-color 0.3s ease,
+                box-shadow 0.3s ease,
+                var(--transition-accent);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-primary);
+}
+
+p {
+    color: var(--text-secondary);
+}
+
+a {
+    color: var(--text-secondary);
+}
+
+a:hover {
+    color: var(--text-primary);
+}
+
+.faq-item button span {
+    color: var(--text-primary);
+}
+
+.faq-content p {
+    color: var(--text-secondary);
+}
+
+#platforms-list li span {
+    color: var(--text-secondary);
+}
+
+input {
+    background-color: var(--input-bg);
+    border-color: var(--input-border);
+    color: var(--input-text);
+}
+
+input::placeholder {
+    color: var(--input-placeholder);
+}
+
+.faq-item button {
+    background-color: var(--faq-bg);
+}
+
+.faq-item button:hover {
+    background-color: var(--faq-hover);
+}
+
+.faq-content {
+    background-color: var(--faq-content-bg);
+}
+
+#platforms-list li {
+    @apply flex flex-col items-center p-2 rounded-lg border transition-all duration-300;
+    background-color: var(--platform-item-bg);
+    border-color: var(--border-color);
+}
+
+#platforms-list li:hover {
+    @apply transform scale-105;
+    background-color: var(--card-hover);
+    border-color: var(--icon-primary);
+}
+
+.bg-white {
+    background-color: var(--card-bg) !important;
+}
+
+.bg-gray-50 {
+    background-color: var(--card-hover) !important;
+}
+
+@media (max-width: 640px) {
+    .platform-card {
+        @apply p-4;
+    }
+    
+    .download-button {
+        @apply px-4 py-2;
+    }
+    
+    .loading-spinner {
+        width: 36px;
+        height: 36px;
+    }
+}
+
+.bg-gradient-to-r {
+    background: linear-gradient(to right, var(--issue-bg-from), var(--issue-bg-to));
+}
+
+.dark .hover\:bg-gray-900:hover {
+    background-color: var(--button-hover-dark);
+}
+
+.dark .hover\:bg-indigo-700:hover {
+    background-color: var(--button-hover-primary);
+}
+
+.bg-gradient-to-r {
+    transition: background 0.3s ease;
+}
+
+.faq-item {
+    @apply transform transition-all duration-300;
+}
+
+.faq-toggle {
+    width: 100%;
+    background-color: var(--faq-bg);
+}
+
+.faq-toggle:hover {
+    background-color: var(--faq-hover);
+}
+
+.faq-content {
+    background-color: var(--faq-content-bg);
+}
+
+.faq-toggle,
+.faq-content,
+#platforms-list li {
+    transition: all 0.3s ease;
+}
+
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.aspect-square {
+    aspect-ratio: 1 / 1;
+}
+
+:root {
+    --transition-accent: none;
+}
+
+:root {
+        --red-50: #fef2f2;
+    --red-100: #fee2e2;
+    --red-200: #fecaca;
+    --red-300: #fca5a5;
+    --red-400: #f87171;
+    --red-500: #ef4444;
+    --red-600: #dc2626;
+    --red-700: #b91c1c;
+    --red-800: #991b1b;
+    --red-900: #7f1d1d;
+
+        --blue-50: #eff6ff;
+    --blue-100: #dbeafe;
+    --blue-200: #bfdbfe;
+    --blue-300: #93c5fd;
+    --blue-400: #60a5fa;
+    --blue-500: #3b82f6;
+    --blue-600: #2563eb;
+    --blue-700: #1d4ed8;
+    --blue-800: #1e40af;
+    --blue-900: #1e3a8a;
+
+        --green-50: #f0fdf4;
+    --green-100: #dcfce7;
+    --green-200: #bbf7d0;
+    --green-300: #86efac;
+    --green-400: #4ade80;
+    --green-500: #22c55e;
+    --green-600: #16a34a;
+    --green-700: #15803d;
+    --green-800: #166534;
+    --green-900: #14532d;
+
+        --yellow-50: #fefce8;
+    --yellow-100: #fef9c3;
+    --yellow-200: #fef08a;
+    --yellow-300: #fde047;
+    --yellow-400: #facc15;
+    --yellow-500: #eab308;
+    --yellow-600: #ca8a04;
+    --yellow-700: #a16207;
+    --yellow-800: #854d0e;
+    --yellow-900: #713f12;
+
+        --purple-50: #faf5ff;
+    --purple-100: #f3e8ff;
+    --purple-200: #e9d5ff;
+    --purple-300: #d8b4fe;
+    --purple-400: #c084fc;
+    --purple-500: #a855f7;
+    --purple-600: #9333ea;
+    --purple-700: #7e22ce;
+    --purple-800: #6b21a8;
+    --purple-900: #581c87;
+
+        --indigo-50: #eef2ff;
+    --indigo-100: #e0e7ff;
+    --indigo-200: #c7d2fe;
+    --indigo-300: #a5b4fc;
+    --indigo-400: #818cf8;
+    --indigo-500: #6366f1;
+    --indigo-600: #4f46e5;
+    --indigo-700: #4338ca;
+    --indigo-800: #3730a3;
+    --indigo-900: #312e81;
+
+        --pink-50: #fdf2f8;
+    --pink-100: #fce7f3;
+    --pink-200: #fbcfe8;
+    --pink-300: #f9a8d4;
+    --pink-400: #f472b6;
+    --pink-500: #ec4899;
+    --pink-600: #db2777;
+    --pink-700: #be185d;
+    --pink-800: #9d174d;
+    --pink-900: #831843;
+}
+
+[data-accent="red"] {
+    --accent-color: var(--red-500);
+    --icon-primary: var(--red-500);
+    --icon-secondary: var(--red-400);
+    --button-bg: var(--red-500);
+    --button-hover-bg: var(--red-600);
+    --scrollbar-thumb: var(--red-500);
+    --scrollbar-thumb-hover: var(--red-600);
+    --spinner-accent-color: var(--red-500);
+    --card-hover-border-color: var(--red-400);
+}
+
+[data-accent="blue"] {
+    --accent-color: var(--blue-500);
+    --icon-primary: var(--blue-500);
+    --icon-secondary: var(--blue-400);
+    --button-bg: var(--blue-500);
+    --button-hover-bg: var(--blue-600);
+    --scrollbar-thumb: var(--blue-500);
+    --scrollbar-thumb-hover: var(--blue-600);
+    --spinner-accent-color: var(--blue-500);
+    --card-hover-border-color: var(--blue-400);
+}
+
+[data-accent="green"] {
+    --accent-color: var(--green-500);
+    --icon-primary: var(--green-500);
+    --icon-secondary: var(--green-400);
+    --button-bg: var(--green-500);
+    --button-hover-bg: var(--green-600);
+    --scrollbar-thumb: var(--green-500);
+    --scrollbar-thumb-hover: var(--green-600);
+    --spinner-accent-color: var(--green-500);
+    --card-hover-border-color: var(--green-400);
+}
+
+
+* {
+    transition: color 0.3s ease,
+                background-color 0.3s ease,
+                border-color 0.3s ease,
+                box-shadow 0.3s ease;
+}
+
+.dark [data-accent] {
+    --icon-primary: var(--accent-color);
+    --icon-secondary: color-mix(in srgb, var(--accent-color) 80%, white);
+    --button-bg: var(--accent-color);
+    --button-hover-bg: color-mix(in srgb, var(--accent-color) 80%, black);
+    --scrollbar-thumb: var(--accent-color);
+    --scrollbar-thumb-hover: color-mix(in srgb, var(--accent-color) 80%, white);
+}
+
+.download-options {
+    @apply fixed inset-0 z-50 flex items-center justify-center p-4;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+}
+
+.download-popup {
+    @apply w-full max-w-lg bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden transform transition-all;
+    animation: popup-enter 0.3s ease-out;
+}
+
+@keyframes popup-enter {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.download-option {
+    @apply flex items-center gap-4 p-4 transition-all duration-200 border-b border-gray-100 dark:border-gray-700/30;
+    background: var(--item-bg);
+}
+
+.download-option:hover {
+    @apply bg-gray-50 dark:bg-gray-700/30;
+    transform: translateX(4px);
+}
+
+.download-option-icon {
+    @apply w-12 h-12 rounded-xl flex items-center justify-center;
+    background: var(--icon-bg, var(--gradient-from));
+    color: var(--icon-color);
+}
+
+.download-option-info {
+    @apply flex-1;
+}
+
+.download-option-title {
+    @apply text-sm font-medium;
+    color: var(--text-primary);
+}
+
+.download-option-details {
+    @apply text-xs mt-1;
+    color: var(--text-secondary);
+}
+
+.download-option-action {
+    @apply px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200;
+    background: var(--button-bg);
+    color: var(--button-text-color);
+}
+
+.download-option-action:hover {
+    background: var(--button-hover-bg);
+    transform: translateY(-1px);
+}
+
+.dark .download-popup {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.dark .download-option-icon {
+    background: var(--icon-bg, var(--gradient-to));
+}
+
+section[id] {
+    scroll-margin-top: 100px;
+}
+
+section[id]:target {
+    animation: highlight 1s ease-out;
+}
+
+@keyframes highlight {
+    from {
+        outline: 2px solid transparent;
+    }
+    50% {
+        outline: 2px solid var(--accent-color);
+    }
+    to {
+        outline: 2px solid transparent;
+    }
+}
+
+section {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+.fixed-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+}
+
+.media-preview-modal {
+    @apply fixed inset-0 z-[999999] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 sm:p-8;
+}
+
+.media-preview-container {
+    @apply relative w-full max-w-4xl bg-white/95 dark:bg-gray-800/95 backdrop-blur-lg rounded-2xl shadow-2xl overflow-hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.media-preview-header {
+    @apply flex items-center justify-between p-4 border-b border-gray-100/10 dark:border-gray-700/20;
+}
+
+.media-preview-content {
+    @apply p-6;
+}
+
+.media-preview-video-container {
+    @apply relative aspect-video rounded-xl overflow-hidden mb-6;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.media-preview-stats {
+    @apply grid grid-cols-3 gap-3 mb-6;
+}
+
+.media-preview-stat-item {
+    @apply flex items-center gap-3 p-4 rounded-xl transition-all duration-300;
+    background: rgba(var(--accent-rgb), 0.05);
+}
+
+.media-preview-downloads {
+    @apply grid gap-3;
+}
+
+.media-preview-download-button {
+    @apply flex items-center gap-3 p-4 rounded-xl transition-all duration-300;
+    background: rgba(var(--accent-rgb), 0.05);
+}
+
+
+.media-preview-overlay {
+    @apply fixed inset-0 z-[999999];
+    background: var(--modal-overlay-bg, rgba(0, 0, 0, 0.95));
+    backdrop-filter: blur(8px);
+}
+
+.media-preview-wrapper {
+    @apply relative w-full max-w-md mx-4 my-4 rounded-2xl overflow-hidden shadow-2xl;
+    background: var(--modal-bg, rgba(255, 255, 255, 0.02));
+    border: 1px solid var(--modal-border, rgba(255, 255, 255, 0.1));
+}
+
+.media-preview-video-container {
+    @apply relative bg-black;
+}
+
+.media-preview-info {
+    background: var(--modal-content-bg, rgba(255, 255, 255, 0.02));
+    @apply p-4 space-y-4;
+}
+
+.media-preview-item {
+    background: var(--modal-item-bg, rgba(255, 255, 255, 0.03));
+    border: 1px solid var(--modal-item-border, rgba(255, 255, 255, 0.1));
+    @apply rounded-xl p-3;
+}
+
+.media-preview-download-grid {
+    @apply grid gap-2;
+}
+
+
+.dark {
+    --modal-overlay-bg: rgba(0, 0, 0, 0.95);
+    --modal-bg: rgba(17, 24, 39, 0.95);
+    --modal-border: rgba(75, 85, 99, 0.3);
+    --modal-content-bg: rgba(17, 24, 39, 0.95);
+    --modal-item-bg: rgba(31, 41, 55, 0.4);
+    --modal-item-border: rgba(75, 85, 99, 0.2);
+}
+
+
+:root {
+    --modal-overlay-bg: rgba(0, 0, 0, 0.95);
+    --modal-bg: rgba(255, 255, 255, 0.95);
+    --modal-border: rgba(229, 231, 235, 0.2);
+    --modal-content-bg: rgba(255, 255, 255, 0.95);
+    --modal-item-bg: rgba(249, 250, 251, 0.4);
+    --modal-item-border: rgba(229, 231, 235, 0.2);
+}
+

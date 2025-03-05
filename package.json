@@ -1,0 +1,28 @@
+{
+    "name": "selfhost-dl",
+    "version": "1.7.0",
+    "description": "SelfHost-DL is my project that lets users self-host a simple web downloader with minimal setup. Just run it with Node.js—no third-party services needed. Deploy the files, start the server, and download content easily. Perfect for a lightweight, self-managed solution.",
+    "main": "server.js",
+    "scripts": {
+        "start": "node server.js",
+        "dev": "nodemon server.js",
+        "vercel": "node vercel.js"
+    },
+    "author": "Mistra",
+    "license": "MIT",
+    "dependencies": {
+        "axios": "^1.6.7",
+        "cheerio": "^1.0.0-rc.12",
+        "cors": "^2.8.5",
+        "dotenv": "^16.4.1",
+        "express": "^4.18.2",
+        "soundcloud-downloader": "^1.0.0",
+        "crypto": "^1.0.1"
+    },
+    "devDependencies": {
+        "nodemon": "^3.0.3"
+    },
+    "engines": {
+        "node": "18.x"
+    }
+}

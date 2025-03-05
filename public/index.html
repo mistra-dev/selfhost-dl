@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="id" x-data="{ 
+    isDark: localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches),
+    get currentColor() { return Alpine.store('accent').color || 'indigo' },
+    open: false,
+    showDownloadOptions: false,
+    downloadOptions: [],
+    toggleDark() {
+        this.isDark = !this.isDark;
+        if (this.isDark) {
+            document.documentElement.classList.add('dark');
+            localStorage.theme = 'dark';
+        } else {
+            document.documentElement.classList.remove('dark');
+            localStorage.theme = 'light';
+        }
+    },
+    setColor(color) {
+        const oldColor = this.currentColor;
+        Alpine.store('accent').setColor(color);
+        localStorage.setItem('accentColor', color);
+        this.updateAccentColor(oldColor, color);
+    },
+    updateAccentColor(oldColor, newColor) {
+        this.currentColor = newColor;
+        updateElementColors(this.$el, newColor, oldColor);
+    }
+}" x-init="
+    $nextTick(() => {
+        const savedColor = localStorage.getItem('accentColor') || 'indigo';
+        if (savedColor !== currentColor) {
+            setColor(savedColor);
+        }
+
+        const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        darkModeMediaQuery.addEventListener('change', e => {
+            if (!('theme' in localStorage)) {
+                isDark = e.matches;
+                if (isDark) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            }
+        });
+
+        if (isDark) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    })
+">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All-in-One Media Downloader</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <meta name="color-scheme" content="light dark">
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1f2937">
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+    <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
+</head>
+<body class="min-h-screen font-inter transition-colors duration-300" 
+      :class="{'dark': isDark, 
+               'bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 dark:from-gray-800 dark:via-gray-900 dark:to-black': true}">
+    <div class="container mx-auto px-4 py-4 sm:py-8">
+
+        <header class="mb-16">
+            <nav class="flex items-center justify-between bg-white/95 dark:bg-gray-800/95 backdrop-blur-lg rounded-2xl shadow-lg px-4 py-3 mb-12" data-aos="fade-down" data-aos-duration="400">
+                                <div class="flex items-center gap-3">
+                    <div class="relative">
+                        <i class="fas fa-cloud-download-alt text-3xl"
+                           :class="`text-${currentColor}-500 dark:text-${currentColor}-400`"></i>
+                    </div>
+                    <div class="hidden sm:block">
+                        <h1 class="text-xl font-bold font-poppins"
+                            :class="`text-${currentColor}-500 dark:text-${currentColor}-400`">
+                            WebDL
+                        </h1>
+                        <p class="text-xs text-gray-600 dark:text-gray-400">Media Downloader</p>
+                    </div>
+                </div>
+
+                                <div class="hidden md:flex items-center gap-6">
+                    <a href="#about" 
+                    :class="`text-sm font-medium text-${currentColor}-500 dark:text-${currentColor}-400 hover:text-${currentColor}-600 dark:hover:text-${currentColor}-300 transition-colors`">
+                     About
+                 </a>
+                    <a href="#features" 
+                       :class="`text-sm font-medium text-${currentColor}-500 dark:text-${currentColor}-400 hover:text-${currentColor}-600 dark:hover:text-${currentColor}-300 transition-colors`">
+                        Features
+                    </a>
+                    <a href="#supported-platforms" 
+                       :class="`text-sm font-medium text-${currentColor}-500 dark:text-${currentColor}-400 hover:text-${currentColor}-600 dark:hover:text-${currentColor}-300 transition-colors`">
+                        Supported Platforms
+                    </a>
+                    <a href="#faq" 
+                       :class="`text-sm font-medium text-${currentColor}-500 dark:text-${currentColor}-400 hover:text-${currentColor}-600 dark:hover:text-${currentColor}-300 transition-colors`">
+                        FAQ
+                    </a>
+                </div>
+
+                                <div class="flex items-center gap-3">
+                                        <button @click="toggleDark()" 
+                            class="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-gray-100/50 dark:hover:bg-gray-700/50 transition-all duration-200">
+                        <i class="fas" 
+                           :class="[isDark ? 'fa-sun' : 'fa-moon', `text-${currentColor}-500 dark:text-${currentColor}-400`]"></i>
+                    </button>
+
+                                        <div class="dropdown-container parent-container" style="position: relative;">
+                        <button @click="open = !open" 
+                                class="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-gray-100/50 dark:hover:bg-gray-700/50 transition-all duration-200">
+                            <i class="fas fa-bars text-lg"
+                               :class="`text-${currentColor}-500 dark:text-${currentColor}-400`"></i>
+                        </button>
+
+                                                <div x-show="open" 
+                             x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="opacity-0 translate-y-2"
+                             x-transition:enter-end="opacity-100 translate-y-0"
+                             x-transition:leave="transition ease-in duration-150"
+                             x-transition:leave-start="opacity-100 translate-y-0"
+                             x-transition:leave-end="opacity-0 translate-y-2"
+                             @click.away="open = false"
+                             class="dropdown-menu fixed right-4 mt-2 w-48 rounded-xl overflow-hidden bg-white dark:bg-gray-800 shadow-xl dark:shadow-gray-900/30"
+                             style="z-index: 999999; top: 60px;">
+                            
+                                                        <div class="px-3 py-2 border-b border-gray-100 dark:border-gray-700/30">
+                                <div class="flex flex-col gap-1.5">
+                                    <span class="text-xs font-medium text-gray-800 dark:text-white">Accent Color</span>
+                                    <div class="grid grid-cols-4 gap-1.5">
+                                        <template x-for="color in [
+                                            { name: 'red', label: 'Red', hex: '#EF4444' },
+                                            { name: 'blue', label: 'Blue', hex: '#3B82F6' },
+                                            { name: 'green', label: 'Green', hex: '#10B981' },
+                                            { name: 'yellow', label: 'Yellow', hex: '#F59E0B' },
+                                            { name: 'purple', label: 'Purple', hex: '#8B5CF6' },
+                                            { name: 'indigo', label: 'Indigo', hex: '#6366F1' },
+                                            { name: 'pink', label: 'Pink', hex: '#EC4899' }
+                                        ]" :key="color.name">
+                                            <button @click="$nextTick(() => { setColor(color.name); })"
+                                                    :class="{'ring-2 ring-offset-1 dark:ring-offset-gray-800': currentColor === color.name}"
+                                                    class="w-5 h-5 rounded-full transition-all duration-200 hover:scale-110 focus:outline-none shadow-md hover:shadow-lg"
+                                                    :style="`background-color: ${color.hex}`"
+                                                    :title="color.label">
+                                            </button>
+                                        </template>
+                                    </div>
+                                </div>
+                            </div>
+
+                                                        <div class="py-1">
+                                <a href="https://github.com/rdmistra/selfhost-dl" target="_blank"
+                                    :class="`group flex items-center px-3 py-2 text-xs text-gray-800 dark:text-white hover:bg-${currentColor}-50/50 dark:hover:bg-${currentColor}-500/10 transition-colors`">
+                                    <i :class="`fas fa-code text-${currentColor}-500 dark:text-${currentColor}-400 mr-2 w-4 transition-transform duration-300 group-hover:scale-110`"></i>
+                                    <span :class="`transition-colors duration-300 group-hover:text-${currentColor}-500 dark:group-hover:text-${currentColor}-400`">Source Code</span>
+                                </a>
+                                <a href="https://github.com/rdmistra/selfhost-dl/issues" target="_blank"
+                                    :class="`group flex items-center px-3 py-2 text-xs text-gray-800 dark:text-white hover:bg-${currentColor}-50/50 dark:hover:bg-${currentColor}-500/10 transition-colors`">
+                                    <i :class="`fas fa-bug text-${currentColor}-500 dark:text-${currentColor}-400 mr-2 w-4 transition-transform duration-300 group-hover:scale-110`"></i>
+                                    <span :class="`transition-colors duration-300 group-hover:text-${currentColor}-500 dark:group-hover:text-${currentColor}-400`">Report Issue</span>
+                                </a>
+                                <a href="https://sociabuzz.com/rdms" target="_blank"
+                                    :class="`group flex items-center px-3 py-2 text-xs text-gray-800 dark:text-white hover:bg-${currentColor}-50/50 dark:hover:bg-${currentColor}-500/10 transition-colors`">
+                                    <i :class="`fas fa-hand-holding-heart text-${currentColor}-500 dark:text-${currentColor}-400 mr-2 w-4 transition-transform duration-300 group-hover:scale-110`"></i>
+                                    <span :class="`transition-colors duration-300 group-hover:text-${currentColor}-500 dark:group-hover:text-${currentColor}-400`">Donate Creator</span>
+                                </a>
+                                <a href="https://github.com/rdmistra" target="_blank"
+                                :class="`group flex items-center px-3 py-2 text-xs text-gray-800 dark:text-white hover:bg-${currentColor}-50/50 dark:hover:bg-${currentColor}-500/10 transition-colors`">
+                                <i :class="`fas fa-external-link-alt text-${currentColor}-500 dark:text-${currentColor}-400 mr-2 w-4 transition-transform duration-300 group-hover:scale-110`"></i>
+                                <span :class="`transition-colors duration-300 group-hover:text-${currentColor}-500 dark:group-hover:text-${currentColor}-400`">Other Projects</span>
+                            </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+                        <div class="text-center" data-aos="fade-up" data-aos-duration="400">
+                <h1 class="text-3xl sm:text-4xl font-bold font-poppins mb-4"
+                    :class="`text-${currentColor}-500 dark:text-${currentColor}-400`">
+                    All-in-One Media Downloader
+                </h1>
+                <p class="text-sm sm:text-base text-gray-600 dark:text-gray-400">Download media from various social media platforms with ease.</p>
+            </div>
+        </header>
+        
+        <div class="max-w-4xl mx-auto relative" style="z-index: 0;">
+                        <div class="bg-slate-100 dark:bg-slate-800 backdrop-blur-md rounded-2xl shadow-lg p-6 sm:p-8 mb-8 border border-gray-200 dark:border-gray-700"
+                 data-aos="fade-up" data-aos-duration="400">
+                <div class="flex flex-col gap-4">
+                    <div class="relative" style="z-index: 0;">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <i class="fas fa-link text-gray-400"></i>
+                        </div>
+                        <input type="url" id="urlInput" 
+                               class="w-full pl-12 pr-4 py-3 sm:py-4 border border-gray-200 dark:border-gray-700 rounded-lg sm:rounded-xl outline-none transition-all duration-200 text-sm sm:text-base bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200"
+                               :class="`focus:border-${currentColor}-500/50 dark:focus:border-${currentColor}-400/50 focus:ring-0`"
+                               placeholder="Input Url here">
+                    </div>
+                    
+                    <div id="loading" class="hidden mt-6 sm:mt-8">
+                        <div class="loading-spinner w-full flex justify-center items-center min-h-[100px]">
+                            <div class="relative w-12 h-12">
+                                <div class="absolute inset-0 rounded-full border-[3px] border-gray-200 dark:border-gray-700"></div>
+                                <div class="absolute inset-0 rounded-full border-[3px]" :class="`border-t-${currentColor}-500 dark:border-t-${currentColor}-400 animate-spin`"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="downloadMedia()" 
+                            :class="`download-btn w-full sm:w-auto flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-${currentColor}-500 text-white rounded-lg sm:rounded-xl hover:bg-${currentColor}-600 transition-all transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-${currentColor}-400 focus:ring-offset-2 text-sm sm:text-base disabled:opacity-75 disabled:cursor-not-allowed disabled:transform-none disabled:hover:scale-100`">
+                        <i class="fas fa-download"></i>
+                        <span>Download</span>
+                    </button>
+                </div>
+
+                <div id="result" class="hidden mt-6 sm:mt-8">
+                    <div class="bg-white/95 dark:bg-gray-800/95 backdrop-blur-lg rounded-2xl shadow-xl p-6">
+                        <div class="border-t border-gray-100 pt-4 sm:pt-6">
+                            <div class="flex items-center gap-2 mb-4 sm:mb-6">
+                                <div class="w-2 h-2 rounded-full" :class="`bg-${currentColor}-500`"></div>
+                                <h3 class="text-base sm:text-lg font-semibold text-gray-800">Download Result</h3>
+                            </div>
+                            <div id="mediaPreview" class="space-y-4 sm:space-y-6"
+                                 :class="`text-${currentColor}-500 dark:text-${currentColor}-400`">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                        <div id="about" class="bg-slate-100 dark:bg-slate-800 backdrop-blur-md rounded-2xl shadow-lg p-6 sm:p-8 mb-8 border border-gray-200 dark:border-gray-700"
+                 data-aos="fade-up" data-aos-duration="400">
+                <div class="flex items-center gap-2 mb-4">
+                    <div class="w-2 h-2 rounded-full" :class="`bg-${currentColor}-500 dark:bg-${currentColor}-400`"></div>
+                    <h2 class="text-base sm:text-lg font-semibold text-gray-800 dark:text-white">About WebDL</h2>
+                </div>
+                
+                <div class="space-y-4">
+                    <p class="text-gray-800 dark:text-white text-base">
+                        WebDL is a powerful and reliable downloader designed to support multiple platforms, making it easy for you to download content from various sources. With a focus on compatibility and efficiency, we ensure a seamless downloading experience across different services.
+                    </p>
+                </div>
+            </div>
+
+                        <div id="features" class="bg-slate-100 dark:bg-slate-800 backdrop-blur-md rounded-2xl shadow-lg p-6 sm:p-8 mb-8 border border-gray-200 dark:border-gray-700"
+                 data-aos="fade-up" data-aos-duration="400">
+                                <div class="text-center mb-8">
+                    <h2 class="text-2xl sm:text-3xl font-bold font-poppins text-gray-800 dark:text-white flex items-center justify-center gap-3">
+                        <i class="fas fa-star" :class="`text-${currentColor}-500 dark:text-${currentColor}-400`"></i>
+                        Why Choose Us
+                    </h2>
+                    <p class="mt-2 text-gray-600 dark:text-gray-400">Enjoy various benefits of our services</p>
+                </div>
+                
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                    <template x-for="(feature, index) in [
+                        { 
+                            icon: 'fa-bolt', 
+                            title: 'Lightning Fast Downloads', 
+                            desc: 'Experience blazing-fast download speeds powered by our high-performance servers'
+                        },
+                        { 
+                            icon: 'fa-shield-alt', 
+                            title: '100% Safe & Free', 
+                            desc: 'No annoying ads, malware, or hidden costs. Your security is our priority'
+                        },
+                        { 
+                            icon: 'fa-check-circle', 
+                            title: 'Premium Quality', 
+                            desc: 'Download content in the highest quality available from supported platforms'
+                        }
+                    ]" :key="index">
+                        <div class="bg-white/90 dark:bg-gray-700/80 backdrop-blur-lg p-6 rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+                             :data-aos="'fade-up'"
+                             :data-aos-delay="index * 100">
+                                                        <div class="mb-5 relative">
+                                <div class="w-14 h-14 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110">
+                                    <i :class="`fas ${feature.icon} text-2xl text-${currentColor}-500 dark:text-${currentColor}-400`"></i>
+                                </div>
+
+                            
+                                                        <div class="relative">
+                                <h3 class="text-xl font-semibold mb-3 transition-colors duration-300"
+                                    :class="`text-${currentColor}-600 dark:text-${currentColor}-400`"
+                                    x-text="feature.title"></h3>
+                                <p class="text-gray-600 dark:text-gray-300 leading-relaxed" 
+                                   x-text="feature.desc"></p>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+                        <div id="supported-platforms" class="bg-slate-100 dark:bg-slate-800 backdrop-blur-md rounded-2xl shadow-lg p-6 sm:p-8 mb-8 border border-gray-200 dark:border-gray-700"
+                 data-aos="fade-up" data-aos-duration="400">
+                <div class="flex items-center gap-2 mb-4">
+                    <div class="w-2 h-2 rounded-full" :class="`bg-${currentColor}-500 dark:bg-${currentColor}-400`"></div>
+                    <h2 class="text-base sm:text-lg font-semibold text-gray-800 dark:text-white">Supported Platforms</h2>
+                </div>
+                
+                <ul id="platforms-list" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3" x-data="{ platforms: [
+                    { name: 'TikTok', icon: 'fab fa-tiktok' },
+                    { name: 'CapCut', icon: 'fas fa-video' },
+                    { name: 'RedNote', icon: 'fas fa-book' },
+                    { name: 'Threads', icon: 'fab fa-at' },
+                    { name: 'Soundcloud', icon: 'fab fa-soundcloud' },
+                    { name: 'Spotify', icon: 'fab fa-spotify' },
+                    { name: 'Facebook', icon: 'fab fa-facebook' },
+                    { name: 'Instagram', icon: 'fab fa-instagram' },
+                    { name: 'Terabox', icon: 'fas fa-box' },
+                    { name: 'Snackvideo', icon: 'fas fa-video' }
+                ]}">
+                    <template x-for="(platform, index) in platforms" :key="index">
+                        <li class="flex flex-col items-center p-3 bg-white/90 dark:bg-gray-700/80 rounded-xl border border-gray-100/50 dark:border-gray-600/20 transition-all duration-300 hover:shadow-lg"
+                            :class="`hover:bg-${currentColor}-50/50 dark:hover:bg-${currentColor}-900/20 hover:border-${currentColor}-100/50 dark:hover:border-${currentColor}-700/30`">
+                            <div class="w-8 h-8 flex items-center justify-center text-white rounded-lg mb-1"
+                                 :class="`bg-${currentColor}-500 bg-opacity-90`">
+                                <i :class="`${platform.icon} text-sm`"></i>
+                            </div>
+                            <span class="text-xs font-medium text-gray-600" x-text="platform.name"></span>
+                        </li>
+                    </template>
+                </ul>
+            </div>
+            
+
+            <div id="faq" class="bg-slate-100 dark:bg-slate-800 backdrop-blur-md rounded-2xl shadow-lg p-6 sm:p-8 border border-gray-200 dark:border-gray-700"
+                 data-aos="fade-up" data-aos-duration="400">
+                <div class="p-6 sm:p-8">
+                    <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white mb-8 sm:mb-10 flex items-center gap-3">
+                        <i class="fas fa-question-circle text-3xl" :class="`text-${currentColor}-500 dark:text-${currentColor}-400`"></i>
+                        Frequently Asked Questions
+                    </h2>
+                    
+                    <div class="space-y-5" x-data="{ 
+                        faqs: [
+                            { icon: 'fa-download', question: 'How to use WebDL?', answer: 'It\'s very easy! Just copy the URL of the content you want to download, paste it in the input box, and click the Download button. WebDL will automatically process and prepare the file for download.' },
+                            { icon: 'fa-video', question: 'What formats are supported?', answer: 'WebDL supports various media formats including MP4, MP3, and other formats. You can download videos, audio, and images from supported platforms with the best available quality.' },
+                            { icon: 'fa-mobile-alt', question: 'Can it be used on mobile?', answer: 'Yes! WebDL is designed to be responsive and works well on all devices, including smartphones and tablets.' },
+                            { icon: 'fa-shield-alt', question: 'Is WebDL safe to use?', answer: 'Absolutely! WebDL is 100% safe and free. We don\'t store your personal data or downloaded files. All processes are done directly without ads or malware.' },
+                            { icon: 'fa-bolt', question: 'How fast is the processing time?', answer: 'The processing time is optimized to be as fast as possible, depending on the file type and size.' },
+                            { icon: 'fa-code', question: 'Is this project open source?', answer: 'Yes, you can check the source code by tapping the three-dot button in the top right corner and selecting Source Code.' },
+                            { icon: 'fa-wifi', question: 'Are there speed limits?', answer: 'No speed limits! We optimize our servers to provide maximum download speeds according to your internet connection.' },
+                            { icon: 'fa-question', question: 'Link not working?', answer: 'Make sure the URL you entered is correct and from a platform we support. If still having issues, try refreshing the page or report the problem via the Report Issue button.' },
+                            { icon: 'fa-sync', question: 'How many times can I download?', answer: 'No limits! You can use WebDL as much as you want without daily download restrictions.' }
+                        ]
+                    }">
+                        <template x-for="(faq, index) in faqs" :key="index">
+                            <div class="faq-item group">
+                                <button @click="faq.isOpen = !faq.isOpen"
+                                        class="w-full px-6 py-5 flex items-center justify-between text-left rounded-xl transition-all duration-300"
+                                        :class="`bg-white/95 dark:bg-gray-700/50 hover:bg-${currentColor}-50/50 dark:hover:bg-${currentColor}-900/20 ${faq.isOpen ? `bg-${currentColor}-50/50 dark:bg-${currentColor}-900/20` : ''}`">
+                                    <span class="font-medium text-gray-800 dark:text-white flex items-center gap-4">
+                                        <div class="w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300"
+                                             :class="`bg-${currentColor}-100/50 dark:bg-${currentColor}-900/30 group-hover:bg-${currentColor}-200/50 dark:group-hover:bg-${currentColor}-800/30`">
+                                            <i :class="`fas ${faq.icon} text-lg text-${currentColor}-500 dark:text-${currentColor}-400`"></i>
+                                        </div>
+                                        <span x-text="faq.question" class="text-left"></span>
+                                    </span>
+                                    <i class="fas fa-chevron-down transition-transform duration-300"
+                                       :class="`text-${currentColor}-500 dark:text-${currentColor}-400 transform ${faq.isOpen ? 'rotate-180' : ''}`"></i>
+                                </button>
+                                <div class="overflow-hidden transition-all duration-300 ease-in-out"
+                                     x-show="faq.isOpen"
+                                     x-transition:enter="transition ease-out duration-300"
+                                     x-transition:enter-start="opacity-0 max-h-0"
+                                     x-transition:enter-end="opacity-100 max-h-[500px]"
+                                     x-transition:leave="transition ease-in duration-200"
+                                     x-transition:leave-start="opacity-100 max-h-[500px]"
+                                     x-transition:leave-end="opacity-0 max-h-0">
+                                    <p class="px-6 pt-4 pb-5 pl-20 text-gray-600 dark:text-gray-300 text-base leading-relaxed" 
+                                       x-text="faq.answer"></p>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <style>
+                    .faq-item {
+                        transform: translateY(0);
+                        transition: all 0.3s ease;
+                    }
+                    
+                    .faq-item:hover {
+                        transform: translateY(-2px);
+                    }
+
+                    .faq-content {
+                        overflow: hidden;
+                    }
+                </style>
+            </div>
+        </div>
+    </div>
+
+        <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 400,
+            once: true,
+            offset: 0,
+            delay: 0,
+            easing: 'ease-out'
+        });
+    </script>
+    <script src="/js/main.js"></script>
+    <script>
+                if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        }
+
+                if (localStorage.theme === 'dark') {
+            document.documentElement.classList.add('dark');
+        }
+
+                const darkModeToggle = document.getElementById('darkModeToggle');
+        darkModeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            
+                        if (document.documentElement.classList.contains('dark')) {
+                localStorage.theme = 'dark';
+            } else {
+                localStorage.theme = 'light';
+            }
+        });
+
+                window.addEventListener('accent-color-changed', (event) => {
+            const { oldColor, newColor } = event.detail;
+            document.querySelector('html').dispatchEvent(new CustomEvent('accent-color-changed', {
+                detail: { oldColor, newColor },
+                bubbles: true
+            }));
+        });
+    </script>
+    <style>
+                .parent-container {
+            overflow: visible !important;
+        }
+        
+                .dropdown-menu {
+            position: absolute !important;
+            right: 0;
+            margin-top: 0.5rem;
+            width: 12rem;
+            z-index: 999999;
+        }
+        
+                .dropdown-container {
+            position: relative !important;
+            isolation: isolate;
+        }
+        
+                body, html {
+            overflow-x: hidden;
+        }
+        
+                nav {
+            position: relative;
+            z-index: 99999 !important;
+        }
+        
+                .dark body {
+            background: var(--bg-gradient-dark);
+        }
+        
+                #darkModeToggle i {
+            transition: transform 0.3s ease;
+        }
+        
+        #darkModeToggle:hover i {
+            transform: rotate(12deg) scale(1.1);
+        }
+
+                .transition-all {
+            transition-duration: 300ms !important;
+        }
+        
+                .floating-shape {
+            animation: float 8s ease-in-out infinite;
+        }
+        
+        .floating-shape-2 {
+            animation: float 10s ease-in-out infinite reverse;
+        }
+        
+        .floating-shape-3 {
+            animation: float 12s ease-in-out infinite;
+        }
+        
+                .hover\:scale-105 {
+            transition-duration: 300ms !important;
+        }
+        
+                .modern-spinner {
+            animation: spin 0.8s ease-in-out infinite;
+        }
+
+        
+        body {
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+        
+        
+        body {
+            transition: background-color 0.3s ease-in-out;
+        }
+        
+        
+        .bg-white\/95 {
+            backdrop-filter: blur(10px);
+        }
+        
+        .dark .bg-gray-800\/95 {
+            backdrop-filter: blur(10px);
+        }
+    </style>
+    <script>
+        function updateElementColors(element, newColor, oldColor) {
+            const updateClasses = (el) => {
+                Array.from(el.classList).forEach(className => {
+                    if (className.includes(`bg-${oldColor}-`)) {
+                        const suffix = className.split(`bg-${oldColor}-`)[1];
+                        el.classList.remove(className);
+                        el.classList.add(`bg-${newColor}-${suffix}`);
+                    }
+                    if (className.includes(`text-${oldColor}-`)) {
+                        const suffix = className.split(`text-${oldColor}-`)[1];
+                        el.classList.remove(className);
+                        el.classList.add(`text-${newColor}-${suffix}`);
+                    }
+                    if (className.includes(`hover:bg-${oldColor}-`)) {
+                        const suffix = className.split(`hover:bg-${oldColor}-`)[1];
+                        el.classList.remove(className);
+                        el.classList.add(`hover:bg-${newColor}-${suffix}`);
+                    }
+                    if (className.includes(`hover:text-${oldColor}-`)) {
+                        const suffix = className.split(`hover:text-${oldColor}-`)[1];
+                        el.classList.remove(className);
+                        el.classList.add(`hover:text-${newColor}-${suffix}`);
+                    }
+                    if (className.includes(`focus:border-${oldColor}-`)) {
+                        const suffix = className.split(`focus:border-${oldColor}-`)[1];
+                        el.classList.remove(className);
+                        el.classList.add(`focus:border-${newColor}-${suffix}`);
+                    }
+                    if (className.includes(`focus:ring-${oldColor}-`)) {
+                        const suffix = className.split(`focus:ring-${oldColor}-`)[1];
+                        el.classList.remove(className);
+                        el.classList.add(`focus:ring-${newColor}-${suffix}`);
+                    }
+                    if (className.includes(`dark:bg-${oldColor}-`)) {
+                        const suffix = className.split(`dark:bg-${oldColor}-`)[1];
+                        el.classList.remove(className);
+                        el.classList.add(`dark:bg-${newColor}-${suffix}`);
+                    }
+                    if (className.includes(`dark:text-${oldColor}-`)) {
+                        const suffix = className.split(`dark:text-${oldColor}-`)[1];
+                        el.classList.remove(className);
+                        el.classList.add(`dark:text-${newColor}-${suffix}`);
+                    }
+                    if (className.includes(`dark:hover:text-${oldColor}-`)) {
+                        const suffix = className.split(`dark:hover:text-${oldColor}-`)[1];
+                        el.classList.remove(className);
+                        el.classList.add(`dark:hover:text-${newColor}-${suffix}`);
+                    }
+                });
+            };
+
+            updateClasses(element);
+            element.querySelectorAll('*').forEach(updateClasses);
+        }
+
+        function setAccentColor(newColor, oldColor) {
+            const root = document.documentElement;
+            updateElementColors(root, newColor, oldColor);
+            
+            const event = new CustomEvent('accent-color-changed', {
+                detail: { oldColor, newColor },
+                bubbles: true
+            });
+            root.dispatchEvent(event);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const root = document.documentElement;
+            root.addEventListener('accent-color-changed', (event) => {
+                const { oldColor, newColor } = event.detail;
+                updateElementColors(root, newColor, oldColor);
+            });
+        });
+    </script>
+
+        <div x-show="showDownloadOptions" 
+         class="download-options"
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0">
+        
+        <div class="download-popup">
+                        <div class="p-6 border-b border-gray-100 dark:border-gray-700/30">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-lg font-semibold" :class="`text-${currentColor}-600 dark:text-${currentColor}-400`">
+                        Download Options
+                    </h3>
+                    <button @click="showDownloadOptions = false" 
+                            class="w-8 h-8 flex items-center justify-center rounded-lg transition-colors"
+                            :class="`hover:bg-${currentColor}-50 dark:hover:bg-${currentColor}-900/30 text-${currentColor}-500 dark:text-${currentColor}-400`">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+                        <div class="max-h-[60vh] overflow-y-auto">
+                <template x-for="option in downloadOptions" :key="option.id">
+                    <div class="download-option hover:bg-gray-50 dark:hover:bg-gray-700/30 p-4 flex items-center gap-4 transition-all duration-200 border-b border-gray-100 dark:border-gray-700/30">
+                        <div class="download-option-icon w-12 h-12 rounded-xl flex items-center justify-center"
+                             :class="`bg-${currentColor}-50 dark:bg-${currentColor}-900/30`">
+                            <i class="fas fa-file-video text-lg"
+                               :class="`text-${currentColor}-500 dark:text-${currentColor}-400`"></i>
+                        </div>
+                        
+                        <div class="flex-1">
+                            <div class="font-medium" :class="`text-${currentColor}-600 dark:text-${currentColor}-400`" x-text="option.quality + ' - ' + option.format"></div>
+                            <div class="text-sm text-gray-500 dark:text-gray-400" x-text="option.size"></div>
+                        </div>
+                        
+                        <button @click="downloadFile(option)" 
+                                class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 text-white"
+                                :class="`bg-${currentColor}-500 hover:bg-${currentColor}-600 hover:shadow-lg hover:shadow-${currentColor}-500/20`">
+                            <i class="fas fa-download mr-2"></i>
+                            Download
+                        </button>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </div>
+    
+    
+    <template id="error-template">
+        <div class="bg-red-100 dark:bg-red-900/30 border-2 border-red-300 dark:border-red-800/50 rounded-xl p-4">
+            <div class="flex items-center gap-3">
+                <div class="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-red-200 dark:bg-red-800/50">
+                    <i class="fas fa-exclamation-circle text-red-600 dark:text-red-400"></i>
+                </div>
+                <p class="text-red-800 dark:text-red-300 font-medium"></p>
+            </div>
+        </div>
+    </template>
+
+    
+    <template id="success-template">
+        <div :class="`bg-${currentColor}-100 dark:bg-${currentColor}-900/30 border-2 border-${currentColor}-300 dark:border-${currentColor}-800/50 rounded-xl p-4`">
+            <div class="flex items-center gap-3">
+                <div :class="`flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-${currentColor}-200 dark:bg-${currentColor}-800/50`">
+                    <i :class="`fas fa-check-circle text-${currentColor}-600 dark:text-${currentColor}-400`"></i>
+                </div>
+                <p :class="`text-${currentColor}-800 dark:text-${currentColor}-300 font-medium`"></p>
+            </div>
+        </div>
+    </template>
+</body>
+</html> 
